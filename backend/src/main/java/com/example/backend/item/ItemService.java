@@ -9,42 +9,41 @@ import java.util.stream.Collectors;
 @Service
 public class ItemService {
 
-    private final ItemRepository itemRepository;
-    private final ItemMapper itemMapper;
+    private final ItemRepository repository;
+    private final ItemMapper mapper;
 
     @Autowired
     public ItemService(ItemRepository itemRepository, ItemMapper itemMapper) {
-        this.itemRepository = itemRepository;
-        this.itemMapper = itemMapper;
+        this.repository = itemRepository;
+        this.mapper = itemMapper;
     }
 
     public List<ItemDTO> getAllItems() {
-        List<ItemEntity> entities = itemRepository.findAll();
+        List<ItemEntity> entities = repository.findAll();
         return entities.stream()
-                .map(itemMapper::toDTO)
+                .map(mapper::toDTO)
                 .collect(Collectors.toList());
     }
 
     public ItemDTO getItemById(String id) {
-        return itemRepository.findById(id)
-                .map(itemMapper::toDTO)
+        return repository.findById(id)
+                .map(mapper::toDTO)
                 .orElse(null);
     }
 
     public ItemDTO createItem(ItemDTO itemDTO) {
-        ItemEntity itemEntity = itemMapper.toEntity(itemDTO);
-        ItemEntity savedEntity = itemRepository.save(itemEntity);
-        return itemMapper.toDTO(savedEntity);
+        ItemEntity itemEntity = mapper.toEntity(itemDTO);
+        ItemEntity savedEntity = repository.save(itemEntity);
+        return mapper.toDTO(savedEntity);
     }
 
     public void deleteItem(String id) {
-        itemRepository.deleteById(id);
+        repository.deleteById(id);
     }
 
     public ItemDTO updateItem(String id, ItemDTO itemDTO) {
-        return itemRepository.findById(id)
+        return repository.findById(id)
                 .map(existingEntity -> {
-                    // Update fields
                     existingEntity.setName(itemDTO.getName());
                     existingEntity.setDescription(itemDTO.getDescription());
                     existingEntity.setPrice(itemDTO.getPrice());
@@ -52,8 +51,8 @@ public class ItemService {
                     existingEntity.setBrand(itemDTO.getBrand());
                     existingEntity.setCategory(itemDTO.getCategory());
                     existingEntity.setTags(itemDTO.getTags());
-                    ItemEntity updatedEntity = itemRepository.save(existingEntity);
-                    return itemMapper.toDTO(updatedEntity);
+                    ItemEntity updatedEntity = repository.save(existingEntity);
+                    return mapper.toDTO(updatedEntity);
                 })
                 .orElse(null);
     }
