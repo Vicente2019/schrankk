@@ -8,8 +8,22 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(BusinessException.class)
-    public ResponseEntity<String> handleBusinessExceptions(BusinessException ex) {
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+    @ExceptionHandler(SchrankException.class)
+    public ResponseEntity<ErrorResponse> handleSchrankException(SchrankException ex) {
+        ErrorResponse errorResponse = new ErrorResponse(ex.getErrorMessage().name(), ex.getMessage());
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
+
+    public static class ErrorResponse {
+        private String errorCode;
+        private String errorMessage;
+
+        public ErrorResponse(String errorCode, String errorMessage) {
+            this.errorCode = errorCode;
+            this.errorMessage = errorMessage;
+        }
+        public String getErrorCode() { return errorCode; }
+        public String getErrorMessage() { return errorMessage; }
+    }
+
 }

@@ -1,6 +1,7 @@
 package com.example.backend.outfit;
 
-import com.example.backend.exception.ItemNotFoundException;
+import com.example.backend.exception.ErrorMessage;
+import com.example.backend.exception.SchrankException;
 import com.example.backend.item.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -43,7 +44,7 @@ public class OutfitService {
 
         // If any dont exist, throw exception
         if (!nonExistingItems.isEmpty()) {
-            throw new ItemNotFoundException("Invalid itemIds: " + nonExistingItems);
+            throw new SchrankException(ErrorMessage.ITEMS_NOT_EXIST, nonExistingItems);
         }
 
         OutfitEntity outfitEntity = mapper.toEntity(outfitDTO);
