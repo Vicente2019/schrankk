@@ -1,6 +1,6 @@
 package com.example.backend.outfit;
 
-import com.example.backend.exception.ErrorMessage;
+import static com.example.backend.exception.ErrorMessage.*;
 import com.example.backend.exception.SchrankException;
 import com.example.backend.item.ItemRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,7 +49,7 @@ public class OutfitService {
 
     public OutfitDTO updateOutfit(String id, OutfitDTO outfitDTO) {
         OutfitEntity existingOutfit = outfitRepository.findById(id)
-                .orElseThrow(() -> new SchrankException(ErrorMessage.OUTFIT_NOT_FOUND, id));
+                .orElseThrow(() -> new SchrankException(OUTFIT_NOT_FOUND, id));
 
         validateItemIdsExist(outfitDTO.getItemIds());
 
@@ -65,10 +65,10 @@ public class OutfitService {
 
     public OutfitDTO addItemToOutfit(String outfitId, String itemId) {
         OutfitEntity outfit = outfitRepository.findById(outfitId)
-                .orElseThrow(() -> new SchrankException(ErrorMessage.OUTFIT_NOT_FOUND, outfitId));
+                .orElseThrow(() -> new SchrankException(OUTFIT_NOT_FOUND, outfitId));
 
         if (!itemRepository.existsById(itemId)) {
-            throw new SchrankException(ErrorMessage.ITEM_NOT_FOUND, itemId);
+            throw new SchrankException(ITEM_NOT_FOUND, itemId);
         }
         outfit.addItem(itemId);
         outfit.verifyInvariants();
@@ -79,7 +79,7 @@ public class OutfitService {
 
     public OutfitDTO removeItemFromOutfit(String outfitId, String itemId) {
         OutfitEntity outfit = outfitRepository.findById(outfitId)
-                .orElseThrow(() -> new SchrankException(ErrorMessage.OUTFIT_NOT_FOUND, outfitId));
+                .orElseThrow(() -> new SchrankException(OUTFIT_NOT_FOUND, outfitId));
 
         outfit.removeItem(itemId);
         outfit.verifyInvariants();
@@ -94,7 +94,7 @@ public class OutfitService {
                 .filter(itemId -> !itemRepository.existsById(itemId))
                 .collect(Collectors.toList());
         if (!nonExistingItems.isEmpty()) {
-            throw new SchrankException(ErrorMessage.ITEMS_NOT_EXIST, nonExistingItems);
+            throw new SchrankException(ITEMS_NOT_EXIST, nonExistingItems);
         }
     }
 }
