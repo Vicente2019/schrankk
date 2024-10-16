@@ -37,16 +37,7 @@ public class OutfitService {
     }
 
     public OutfitDTO createOutfit(OutfitDTO outfitDTO) {
-        // Check if all items exist in repo
-        List<String> nonExistingItems = outfitDTO.getItemIds().stream()
-                .filter(itemId -> !itemRepository.existsById(itemId))
-                .collect(Collectors.toList());
-
-        // If any dont exist, throw exception
-        if (!nonExistingItems.isEmpty()) {
-            throw new SchrankException(ErrorMessage.ITEMS_NOT_EXIST, nonExistingItems);
-        }
-
+        validateItemIdsExist(outfitDTO.getItemIds());
         OutfitEntity outfitEntity = mapper.toEntity(outfitDTO);
         outfitEntity = outfitRepository.save(outfitEntity);
         return mapper.toDTO(outfitEntity);
@@ -57,14 +48,53 @@ public class OutfitService {
     }
 
     public OutfitDTO updateOutfit(String id, OutfitDTO outfitDTO) {
-        return outfitRepository.findById(id)
-                .map(existingEntity -> {
-                    existingEntity.setName(outfitDTO.getName());
-                    existingEntity.setDescription(outfitDTO.getDescription());
-                    existingEntity.setItemIds(outfitDTO.getItemIds());
-                    OutfitEntity updatedEntity = outfitRepository.save(existingEntity);
-                    return mapper.toDTO(updatedEntity);
-                })
-                .orElse(null);
+        OutfitEntity existingOutfit = outfitRepository.findById(id)
+                .orElseThrow(() -> new SchrankException(ErrorMessage.OUTFIT_NOT_FOUND, id));
+
+        validateItemIdsExist(outfitDTO.getItemIds());
+
+        existingOutfit.setName(outfitDTO.getName());
+        existingOutfit.setDescription(outfitDTO.getDescription());
+        existingOutfit.setItemIds(outfitDTO.getItemIds());
+
+        existingOutfit.verifyInvariants();
+        OutfitEntity updatedOutfit = outfitRepository.save(existingOutfit);
+
+        return mapper.toDTO(updatedOutfit);
+    }
+
+    public OutfitDTO addItemToOutfit(String outfitId, String itemId) {
+        OutfitEntity outfit = outfitRepository.findById(outfitId)
+                .orElseThrow(() -> new SchrankException(ErrorMessage.OUTFIT_NOT_FOUND, outfitId));
+
+        if (!itemRepository.existsById(itemId)) {
+            throw new SchrankException(ErrorMessage.ITEM_NOT_FOUND, itemId);
+        }
+        outfit.addItem(itemId);
+        outfit.verifyInvariants();
+
+        outfit = outfitRepository.save(outfit);
+        return mapper.toDTO(outfit);
+    }
+
+    public OutfitDTO removeItemFromOutfit(String outfitId, String itemId) {
+        OutfitEntity outfit = outfitRepository.findById(outfitId)
+                .orElseThrow(() -> new SchrankException(ErrorMessage.OUTFIT_NOT_FOUND, outfitId));
+
+        outfit.removeItem(itemId);
+        outfit.verifyInvariants();
+
+        outfit = outfitRepository.save(outfit);
+        return mapper.toDTO(outfit);
+    }
+
+
+    private void validateItemIdsExist(List<String> itemIds) {
+        List<String> nonExistingItems = itemIds.stream()
+                .filter(itemId -> !itemRepository.existsById(itemId))
+                .collect(Collectors.toList());
+        if (!nonExistingItems.isEmpty()) {
+            throw new SchrankException(ErrorMessage.ITEMS_NOT_EXIST, nonExistingItems);
+        }
     }
 }
