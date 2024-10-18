@@ -33,7 +33,7 @@ public class OutfitService {
     public OutfitDTO getOutfitById(String id) {
         return outfitRepository.findById(id)
                 .map(mapper::toDTO)
-                .orElse(null);
+                .orElseThrow(() -> new SchrankException(OUTFIT_NOT_FOUND, id));
     }
 
     public OutfitDTO createOutfit(OutfitDTO outfitDTO) {
@@ -44,6 +44,9 @@ public class OutfitService {
     }
 
     public void deleteOutfit(String id) {
+        if (!outfitRepository.existsById(id)) {
+            throw new SchrankException(OUTFIT_NOT_FOUND, id);
+        }
         outfitRepository.deleteById(id);
     }
 

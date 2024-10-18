@@ -1,9 +1,12 @@
 package com.example.backend.item;
 
+import com.example.backend.exception.SchrankException;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 import java.util.List;
+
+import static com.example.backend.exception.ErrorMessage.*;
 
 @Document(collection = "items")
 public class ItemEntity {
@@ -28,6 +31,45 @@ public class ItemEntity {
         this.brand = brand;
         this.category = category;
         this.tags = tags;
+        verifyInvariants();
+    }
+
+    public void verifyInvariants() {
+        nameIsRequired();
+        brandIsRequired();
+        categoryIsRequired();
+        priceIsPositive();
+        atLeastThreeTags();
+    }
+
+    private void nameIsRequired() {
+        if (this.name == null || this.name.trim().isEmpty()) {
+            throw new SchrankException(ITEM_NAME_INVALID, this.name);
+        }
+    }
+
+    private void brandIsRequired() {
+        if (this.brand == null || this.brand.trim().isEmpty()) {
+            throw new SchrankException(ITEM_BRAND_INVALID, this.brand);
+        }
+    }
+
+    private void categoryIsRequired() {
+        if (this.category == null || this.category.trim().isEmpty()) {
+            throw new SchrankException(ITEM_CATEGORY_INVALID, this.category);
+        }
+    }
+
+    private void priceIsPositive() {
+        if (this.name == null || this.name.trim().isEmpty()) {
+            throw new SchrankException(ITEM_PRICE_NEGATIVE, this.price);
+        }
+    }
+
+    private void atLeastThreeTags() {
+        if (this.tags == null || this.tags.size() < 3) {
+            throw new SchrankException(ITEMS_NOT_ENOUGH_TAGS, this.tags);
+        }
     }
 
     public String getId() {
