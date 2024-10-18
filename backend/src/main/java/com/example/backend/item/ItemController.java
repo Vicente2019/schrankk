@@ -26,11 +26,7 @@ public class ItemController {
     @GetMapping("/{id}")
     public ResponseEntity<ItemDTO> getItemById(@PathVariable String id) {
         ItemDTO item = itemService.getItemById(id);
-        if (item != null) {
-            return ResponseEntity.ok(item);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(item);
     }
 
     @PostMapping
@@ -42,11 +38,7 @@ public class ItemController {
     @PutMapping("/{id}")
     public ResponseEntity<ItemDTO> updateItem(@PathVariable String id, @RequestBody ItemDTO itemDTO) {
         ItemDTO updatedItem = itemService.updateItem(id, itemDTO);
-        if (updatedItem != null) {
-            return ResponseEntity.ok(updatedItem);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+        return ResponseEntity.ok(updatedItem);
     }
 
     @DeleteMapping("/{id}")
