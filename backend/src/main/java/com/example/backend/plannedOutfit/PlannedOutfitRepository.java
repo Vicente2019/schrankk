@@ -9,4 +9,6 @@ public interface PlannedOutfitRepository extends MongoRepository<PlannedOutfitEn
     Optional<PlannedOutfitEntity> findByPlannedDate(LocalDate plannedDate);
 
     List<PlannedOutfitEntity> findAllByOutfitId(String id);
+
+    Optional<PlannedOutfitEntity> findByPlannedDateAndOutfitId(LocalDate plannedDate, String outfitId);
 }

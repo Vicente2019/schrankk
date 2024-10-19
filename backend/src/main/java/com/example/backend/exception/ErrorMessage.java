@@ -20,7 +20,8 @@ public enum ErrorMessage {
 
     PLANNED_OUTFIT_NOT_FOUND_DATE("Planned Outfit not found with date: %s"),
     PLANNED_OUTFIT_NOT_FOUND_ID("Planned Outfit not found with id: %s"),
-    PLANNED_DATE_CANNOT_BE_IN_THE_PAST("Planned Date cannot be in the past: %s");
+    PLANNED_DATE_CANNOT_BE_IN_THE_PAST("Planned Date cannot be in the past: %s"),
+    OUTFIT_ALREADY_PLANNED_FOR_THIS_DATE("Outfit already planned for this date: %s");
 
     private final String message;
 

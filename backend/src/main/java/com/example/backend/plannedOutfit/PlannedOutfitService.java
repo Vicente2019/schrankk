@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -30,6 +31,10 @@ public class PlannedOutfitService {
         }
         if (plannedDate.isBefore(LocalDate.now())) {
             throw new SchrankException(PLANNED_DATE_CANNOT_BE_IN_THE_PAST, plannedDate.toString());
+        }
+        Optional<PlannedOutfitEntity> existingPlannedOutfit = plannedOutfitRepository.findByPlannedDateAndOutfitId(plannedDate, outfitId);
+        if (existingPlannedOutfit.isPresent()) { // if the same outfit is already on that date
+            throw new SchrankException(OUTFIT_ALREADY_PLANNED_FOR_THIS_DATE, outfitId);
         }
 
         PlannedOutfitEntity plannedOutfitEntity = new PlannedOutfitEntity(outfitId, plannedDate);
