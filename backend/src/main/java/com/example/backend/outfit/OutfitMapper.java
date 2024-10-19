@@ -10,5 +10,5 @@ public interface OutfitMapper {
 
     OutfitDTO toDTO(OutfitEntity outfitEntity);
 
-    OutfitEntity toEntity(OutfitDTO itemDTO);
+    OutfitEntity toEntity(OutfitDTO outfitDTO);
 }
