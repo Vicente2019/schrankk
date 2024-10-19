@@ -7,6 +7,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class PlannedOutfitService {
@@ -31,5 +33,23 @@ public class PlannedOutfitService {
         plannedOutfitEntity = plannedOutfitRepository.save(plannedOutfitEntity);
 
         return plannedOutfitMapper.toDTO(plannedOutfitEntity);
+    }
+
+    public List<PlannedOutfitDTO> getAllPlannedOutfits() {
+        List<PlannedOutfitEntity> plannedOutfitEntities = plannedOutfitRepository.findAll();
+        return plannedOutfitEntities.stream().map(plannedOutfitMapper::toDTO).collect(Collectors.toList());
+    }
+
+    public PlannedOutfitDTO getPlannedOutfitByDate(LocalDate date) {
+        return plannedOutfitRepository.findByPlannedDate(date)
+                .map(plannedOutfitMapper::toDTO)
+                .orElseThrow(() -> new SchrankException(PLANNED_OUTFIT_NOT_FOUND_DATE, date.toString()));
+    }
+
+    public void deletePlannedOutfit(String id) {
+        if (!plannedOutfitRepository.existsById(id)) {
+            throw new SchrankException(PLANNED_OUTFIT_NOT_FOUND_ID, id);
+        }
+        plannedOutfitRepository.deleteById(id);
     }
 }

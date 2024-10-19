@@ -16,7 +16,10 @@ public enum ErrorMessage {
     OUTFIT_NAME_INVALID("Outfit Name: %s, is not valid"),
     OUTFIT_DESCRIPTION_INVALID("Outfit Description: %s, is not valid"),
     OUTFIT_MUST_HAVE_ITEMS("An outfit has one or more items"),
-    OUTFIT_NOT_FOUND("Outfit not found with id: %s");
+    OUTFIT_NOT_FOUND("Outfit not found with id: %s"),
+
+    PLANNED_OUTFIT_NOT_FOUND_DATE("Planned Outfit not found with date: %s"),
+    PLANNED_OUTFIT_NOT_FOUND_ID("Planned Outfit not found with id: %s");
 
     private final String message;
 
