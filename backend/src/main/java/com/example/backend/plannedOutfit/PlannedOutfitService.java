@@ -28,6 +28,9 @@ public class PlannedOutfitService {
         if (!outfitRepository.existsById(outfitId)) {
             throw new SchrankException(OUTFIT_NOT_FOUND, outfitId);
         }
+        if (plannedDate.isBefore(LocalDate.now())) {
+            throw new SchrankException(PLANNED_DATE_CANNOT_BE_IN_THE_PAST, plannedDate.toString());
+        }
 
         PlannedOutfitEntity plannedOutfitEntity = new PlannedOutfitEntity(outfitId, plannedDate);
         plannedOutfitEntity = plannedOutfitRepository.save(plannedOutfitEntity);
