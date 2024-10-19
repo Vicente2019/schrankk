@@ -3,6 +3,8 @@ package com.example.backend.outfit;
 import static com.example.backend.exception.ErrorMessage.*;
 import com.example.backend.exception.SchrankException;
 import com.example.backend.item.ItemRepository;
+import com.example.backend.plannedOutfit.PlannedOutfitEntity;
+import com.example.backend.plannedOutfit.PlannedOutfitRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,12 +16,14 @@ public class OutfitService {
 
     private final OutfitRepository outfitRepository;
     private final ItemRepository itemRepository;
+    private final PlannedOutfitRepository plannedOutfitRepository;
     private final OutfitMapper mapper;
 
     @Autowired
-    public OutfitService(OutfitRepository outfitRepository, ItemRepository itemRepository, OutfitMapper outfitMapper) {
+    public OutfitService(OutfitRepository outfitRepository, ItemRepository itemRepository, PlannedOutfitRepository plannedOutfitRepository, OutfitMapper outfitMapper) {
         this.outfitRepository = outfitRepository;
         this.itemRepository = itemRepository;
+        this.plannedOutfitRepository = plannedOutfitRepository;
         this.mapper = outfitMapper;
     }
 
@@ -47,6 +51,9 @@ public class OutfitService {
         if (!outfitRepository.existsById(id)) {
             throw new SchrankException(OUTFIT_NOT_FOUND, id);
         }
+        List<PlannedOutfitEntity> plannedOutfits = plannedOutfitRepository.findAllByOutfitId(id);
+        plannedOutfitRepository.deleteAll(plannedOutfits);
+
         outfitRepository.deleteById(id);
     }
 
