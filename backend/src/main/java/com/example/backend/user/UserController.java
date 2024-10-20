@@ -23,6 +23,5 @@ public class UserController {
         userService.registerUser(request.getUsername(), request.getPassword(), request.getEmail());
         return ResponseEntity.ok("User registered successfully");
     }
-
     // add login
 }
