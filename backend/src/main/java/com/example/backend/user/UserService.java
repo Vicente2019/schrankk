@@ -34,4 +34,13 @@ public class UserService {
         user.setRoles(Set.of(Role.USER));
         userRepository.save(user);
     }
+
+    public boolean authenticateUser(String username, String password) {
+        UserEntity user = userRepository.findByUsername(username)
+                .orElse(null);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return true;
+        }
+        return false;
+    }
 }

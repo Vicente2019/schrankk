@@ -23,5 +23,13 @@ public class UserController {
         userService.registerUser(request.getUsername(), request.getPassword(), request.getEmail());
         return ResponseEntity.ok("User registered successfully");
     }
-    // add login
+
+    @PostMapping("/login")
+    public ResponseEntity<String> loginUser(@RequestBody LoginDTO loginDTO) {
+        if (userService.authenticateUser(loginDTO.getUsername(), loginDTO.getPassword())) {
+            return ResponseEntity.ok("Login successful");
+        } else {
+            return ResponseEntity.status(401).body("Invalid username or password");
+        }
+    }
 }
