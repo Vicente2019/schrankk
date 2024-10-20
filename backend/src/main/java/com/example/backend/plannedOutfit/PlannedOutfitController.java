@@ -32,9 +32,10 @@ public class PlannedOutfitController {
     }
 
     @PostMapping
-    public ResponseEntity<PlannedOutfitDTO> planOutfit(@RequestParam String outfitId, @RequestParam String date) {
-        LocalDate plannedDate = LocalDate.parse(date);
-        PlannedOutfitDTO plannedOutfit = plannedOutfitService.planOutfit(outfitId, plannedDate);
+    public ResponseEntity<PlannedOutfitDTO> planOutfit(@RequestBody PlannedOutfitDTO plannedOutfitDTO) {
+        PlannedOutfitDTO plannedOutfit = plannedOutfitService.planOutfit(
+                plannedOutfitDTO.getOutfitId(),
+                plannedOutfitDTO.getPlannedDate());
         return ResponseEntity.ok(plannedOutfit);
     }
 
