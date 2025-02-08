@@ -6,12 +6,14 @@ public enum ErrorMessage {
     ITEM_ALREADY_IN_OUTFIT("Item with ID %s already in outfit"),
     ITEM_NOT_FOUND_IN_OUTFIT("Item with ID %s not found in outfit"),
     ITEM_NOT_FOUND("Item not found with id: %s"),
+    ITEM_NOT_FOUND_CATEGORY("No items in this category: %s"),
 
     ITEM_NAME_INVALID("Item Name: %s, is not valid"),
     ITEM_BRAND_INVALID("Item Brand: %s, is not valid"),
     ITEM_CATEGORY_INVALID("Item Category: %s, is not valid"),
     ITEM_PRICE_NEGATIVE("Price cannot be negative: %s"),
     ITEMS_NOT_ENOUGH_TAGS("Items must have at least 3 tags: %s"),
+    NO_ITEMS_FOUND_FOR_TAG("No items found for tag: %s"),
 
     OUTFIT_NAME_INVALID("Outfit Name: %s, is not valid"),
     OUTFIT_DESCRIPTION_INVALID("Outfit Description: %s, is not valid"),

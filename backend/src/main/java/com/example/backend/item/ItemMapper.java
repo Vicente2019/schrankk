@@ -8,7 +8,7 @@ public interface ItemMapper {
 
     ItemMapper INSTANCE = Mappers.getMapper(ItemMapper.class);
 
-    ItemDTO toDTO(ItemEntity itemEntity);
+    ItemDTO map(ItemEntity itemEntity);
 
-    ItemEntity toEntity(ItemDTO itemDTO);
+    ItemEntity map(ItemDTO itemDTO);
 }

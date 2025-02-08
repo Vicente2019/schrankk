@@ -2,6 +2,7 @@ package com.example.backend.outfit;
 
 import static com.example.backend.exception.ErrorMessage.*;
 import com.example.backend.exception.SchrankException;
+import com.example.backend.item.ItemEntity;
 import com.example.backend.item.ItemRepository;
 import com.example.backend.plannedOutfit.PlannedOutfitEntity;
 import com.example.backend.plannedOutfit.PlannedOutfitRepository;
@@ -30,21 +31,21 @@ public class OutfitService {
     public List<OutfitDTO> getAllOutfits() {
         List<OutfitEntity> entities = outfitRepository.findAll();
         return entities.stream()
-                .map(mapper::toDTO)
+                .map(mapper::map)
                 .collect(Collectors.toList());
     }
 
     public OutfitDTO getOutfitById(String id) {
         return outfitRepository.findById(id)
-                .map(mapper::toDTO)
+                .map(mapper::map)
                 .orElseThrow(() -> new SchrankException(OUTFIT_NOT_FOUND, id));
     }
 
     public OutfitDTO createOutfit(OutfitDTO outfitDTO) {
         validateItemIdsExist(outfitDTO.getItemIds());
-        OutfitEntity outfitEntity = mapper.toEntity(outfitDTO);
+        OutfitEntity outfitEntity = mapper.map(outfitDTO);
         outfitEntity = outfitRepository.save(outfitEntity);
-        return mapper.toDTO(outfitEntity);
+        return mapper.map(outfitEntity);
     }
 
     public void deleteOutfit(String id) {
@@ -70,7 +71,7 @@ public class OutfitService {
         existingOutfit.verifyInvariants();
         OutfitEntity updatedOutfit = outfitRepository.save(existingOutfit);
 
-        return mapper.toDTO(updatedOutfit);
+        return mapper.map(updatedOutfit);
     }
 
     public OutfitDTO addItemToOutfit(String outfitId, String itemId) {
@@ -84,7 +85,7 @@ public class OutfitService {
         outfit.verifyInvariants();
 
         outfit = outfitRepository.save(outfit);
-        return mapper.toDTO(outfit);
+        return mapper.map(outfit);
     }
 
     public OutfitDTO removeItemFromOutfit(String outfitId, String itemId) {
@@ -95,7 +96,7 @@ public class OutfitService {
         outfit.verifyInvariants();
 
         outfit = outfitRepository.save(outfit);
-        return mapper.toDTO(outfit);
+        return mapper.map(outfit);
     }
 
 
@@ -107,4 +108,23 @@ public class OutfitService {
             throw new SchrankException(ITEMS_NOT_EXIST, nonExistingItems);
         }
     }
+
+    public OutfitDTO recommendOutfit(String tag) {
+        List<ItemEntity> matchingItems = itemRepository.findAll().stream()
+                .filter(item -> item.getTags() != null && item.getTags().contains(tag))
+                .collect(Collectors.toList());
+
+        if (matchingItems.isEmpty()) {
+            throw new SchrankException(NO_ITEMS_FOUND_FOR_TAG, tag);
+        }
+
+        OutfitEntity recommendedOutfit = new OutfitEntity(
+                "Recommended Outfit",
+                "Automatically generated outfit based on tag: " + tag,
+                matchingItems.stream().map(ItemEntity::getId).collect(Collectors.toList())
+        );
+
+        return mapper.map(recommendedOutfit);
+    }
+
 }

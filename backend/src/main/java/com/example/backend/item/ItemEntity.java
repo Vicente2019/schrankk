@@ -18,12 +18,12 @@ public class ItemEntity {
     private double price;
     private String size;
     private String brand;
-    private String category;
+    private ItemCategory category;
     private List<String> tags;
 
     public ItemEntity() {}
 
-    public ItemEntity(String name, String description, double price, String size, String brand, String category, List<String> tags) {
+    public ItemEntity(String name, String description, double price, String size, String brand, ItemCategory category, List<String> tags) {
         this.name = name;
         this.description = description;
         this.price = price;
@@ -55,7 +55,7 @@ public class ItemEntity {
     }
 
     private void categoryIsRequired() {
-        if (this.category == null || this.category.trim().isEmpty()) {
+        if (this.category == null) {
             throw new SchrankException(ITEM_CATEGORY_INVALID, this.category);
         }
     }
@@ -120,11 +120,11 @@ public class ItemEntity {
         this.brand = brand;
     }
 
-    public String getCategory() {
+    public ItemCategory getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(ItemCategory category) {
         this.category = category;
     }
 

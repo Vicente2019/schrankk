@@ -8,7 +8,7 @@ public interface OutfitMapper {
 
     OutfitMapper INSTANCE = Mappers.getMapper(OutfitMapper.class);
 
-    OutfitDTO toDTO(OutfitEntity outfitEntity);
+    OutfitDTO map(OutfitEntity outfitEntity);
 
-    OutfitEntity toEntity(OutfitDTO outfitDTO);
+    OutfitEntity map(OutfitDTO outfitDTO);
 }

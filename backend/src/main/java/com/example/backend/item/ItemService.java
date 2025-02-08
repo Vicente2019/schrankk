@@ -28,21 +28,21 @@ public class ItemService {
     public List<ItemDTO> getAllItems() {
         List<ItemEntity> entities = repository.findAll();
         return entities.stream()
-                .map(mapper::toDTO)
+                .map(mapper::map)
                 .collect(Collectors.toList());
     }
 
     public ItemDTO getItemById(String id) {
         return repository.findById(id)
-                .map(mapper::toDTO)
+                .map(mapper::map)
                 .orElseThrow(() -> new SchrankException(ErrorMessage.ITEM_NOT_FOUND, id));
     }
 
     public ItemDTO createItem(ItemDTO itemDTO) {
-        ItemEntity itemEntity = mapper.toEntity(itemDTO);
+        ItemEntity itemEntity = mapper.map(itemDTO);
         itemEntity.verifyInvariants();
         ItemEntity savedEntity = repository.save(itemEntity);
-        return mapper.toDTO(savedEntity);
+        return mapper.map(savedEntity);
     }
 
     @Transactional
@@ -69,7 +69,7 @@ public class ItemService {
                     existingEntity.setCategory(itemDTO.getCategory());
                     existingEntity.setTags(itemDTO.getTags());
                     ItemEntity updatedEntity = repository.save(existingEntity);
-                    return mapper.toDTO(updatedEntity);
+                    return mapper.map(updatedEntity);
                 })
                 .orElseThrow(() -> new SchrankException(ErrorMessage.ITEM_NOT_FOUND, id));
     }

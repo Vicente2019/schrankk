@@ -10,12 +10,12 @@ public class ItemDTO {
     private double price;
     private String size;
     private String brand;
-    private String category;
+    private ItemCategory category;
     private List<String> tags;
 
     public ItemDTO() {}
 
-    public ItemDTO(String id, String name, String description, double price, String size, String brand, String category, List<String> tags) {
+    public ItemDTO(String id, String name, String description, double price, String size, String brand, ItemCategory category, List<String> tags) {
         this.id = id;
         this.name = name;
         this.description = description;
@@ -74,11 +74,11 @@ public class ItemDTO {
         this.brand = brand;
     }
 
-    public String getCategory() {
+    public ItemCategory getCategory() {
         return category;
     }
 
-    public void setCategory(String category) {
+    public void setCategory(ItemCategory category) {
         this.category = category;
     }
 
