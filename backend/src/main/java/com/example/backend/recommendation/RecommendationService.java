@@ -15,9 +15,11 @@ import static com.example.backend.exception.ErrorMessage.ITEM_NOT_FOUND_CATEGORY
 public class RecommendationService {
 
     private final ItemRepository itemRepository;
+    private final RecommendationLogRepository recommendationLogRepository;
 
-    public RecommendationService(ItemRepository itemRepository) {
+    public RecommendationService(ItemRepository itemRepository, RecommendationLogRepository recommendationLogRepository) {
         this.itemRepository = itemRepository;
+        this.recommendationLogRepository = recommendationLogRepository;
     }
 
     public ItemEntity recommendItem(ItemCategory category, List<String> tags) {
@@ -26,8 +28,14 @@ public class RecommendationService {
         Optional<ItemEntity> bestItem = itemsInCategory.stream()
                 .max((item1, item2) -> Integer.compare(countMatchingTags(item1.getTags(), tags), countMatchingTags(item2.getTags(), tags)));
 
-        return bestItem.orElseThrow(() -> new SchrankException(ITEM_NOT_FOUND_CATEGORY, category));
+        ItemEntity recommendedItem = bestItem.orElseThrow(() -> new SchrankException(ITEM_NOT_FOUND_CATEGORY, category));
+
+        RecommendationLogEntity log = new RecommendationLogEntity(category.name(), tags, recommendedItem.getId());
+        recommendationLogRepository.save(log);
+
+        return recommendedItem;
     }
+
 
     private int countMatchingTags(List<String> itemTags, List<String> selectedTags) {
         return (int) itemTags.stream().filter(selectedTags::contains).count();
