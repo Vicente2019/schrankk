@@ -21,10 +21,10 @@ public class RecommendationController {
         this.itemMapper = itemMapper;
     }
 
-    @PostMapping("/{category}")
+    @GetMapping("/{category}")
     public ResponseEntity<ItemDTO> recommendItem(
             @PathVariable ItemCategory category,
-            @RequestBody List<String> tags) {
+            @RequestParam List<String> tags) {
 
         ItemEntity bestItem = recommendationService.recommendItem(category, tags);
         return ResponseEntity.ok(itemMapper.map(bestItem));
